@@ -41,33 +41,41 @@ function M.createFSM()
     self.states[#self.states + 1] = state
     return state
   end
-  
+
   instance.addJunction = function (self, state_id1, state_id2)
-  	
-  	local junction = {}
-  	if not self.junctions then self.junctions = {} end
-  	
-  	self.junctions[#self.junctions + 1] = junction
-  	
-  	
-  	return junction
+
+    local junction = {}
+    if not self.junctions then self.junctions = {} end
+
+    self.junctions[#self.junctions + 1] = junction
+
+    junction.setCondition = function (self, stateChangeCondition)
+
+      assert(type(stateChangeCondition) == "function")
+      
+      
+      
+    end
+
+
+    return junction
   end
-  
+
   return instance
 end
 
-  ------------------------------------------
-  -- unit test
-  ------------------------------------------
+------------------------------------------
+-- unit test
+------------------------------------------
 local function main()
 
   --
   local fsm_instance = M.createFSM()
   local state = fsm_instance:addState("init")
   state:addEventHandler("onEnter", function() print("Init state onEnter handler") end)
-  
-  local junction = fsm_instance.addJunction("init", "running")
-  
+
+  local junction = fsm_instance:addJunction("init", "running")
+
 
 end
 
