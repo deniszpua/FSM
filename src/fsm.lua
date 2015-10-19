@@ -8,8 +8,74 @@ local M = {}
 local print = print
 local assert = assert
 local type = type
+local string_format = string.format
+local ipairs = ipairs
 
 --_ENV = M
+
+---------------------------------------------------------------------
+-- Returns fsm state instance
+--
+--
+M.createState = function (state_name, enclosingFsmReference)
+
+  -- private instance variables container
+  local self = {name = state_name, fsm = enclosingFsmReference}
+
+  -- public methods access object
+  local methods = {}
+
+  --------------------------------------------------------------------
+  -- Adds handler to events in particular state.
+  --
+  -- @param             eventType - possible values are ("onEnter", "onExit", "onUpdate").
+  -- @param             handlerFunction - function, that will be called when specified event occurs.
+  methods.addHandler = function(eventType, handlerFunction)
+
+    assert(type(eventType) == "string")
+    assert(type(handlerFunction == "function"))
+
+    if not self.handlers then self.handlers = {} end
+    if not self.handlers[eventType] then self.handlers[eventType] = {} end
+
+    self.handlers[eventType][#self.handlers[eventType] + 1] = handlerFunction
+
+  end
+
+  ---------------------------------------------------------------------------------
+  -- Adds junction, to state instance.
+  --
+  -- @param conditon    function which should return true, when state
+  --                    transition should be performed.
+  -- @param targetState state, to which transition occurs.
+  methods.addJunction = function (condition, targetState)
+
+    assert(type(condition) == "function")
+    assert(type(targetState) == "table")
+
+    if not self.conditions then self.conditions = {} end
+
+    self.conditions[#self.conditions + 1] = condition
+
+  end
+
+  ----------------------------------------------------------------------------------
+  -- Triggers current state onUpdate handlers.
+  --
+  methods.update = function ()
+    local handlers = self.handlers["onUpdate"]
+    
+    if handlers then
+
+      for i, handler in ipairs(handlers) do
+        handler()
+      end
+    end
+  end
+
+  return methods
+
+end
 
 
 --------------------------------------------------------------------
@@ -18,31 +84,17 @@ local type = type
 --
 function M.createFSM()
 
-  local instance = {}
+  local self = {}
 
-  instance.addState = function (self, name_id)
+  local addState = function (self, name_id)
 
     if not self.states then self.states = {} end
 
-    local state = {}
-    state.name = name_id
-    state.addEventHandler = function (self, eventId, eventHandler)
+    self.states[name_id] = M.createState(name_id)
 
-      assert(type(eventHandler == "function"))
-      assert(type(eventId) == "string")
-
-      if not state.handlers then state.handlers = {} end
-      if not state.handlers[eventId] then state.handlers[eventId] = {} end
-
-      state.handlers[eventId][#state.handlers[eventId] + 1] = eventHandler
-
-    end
-
-    self.states[#self.states + 1] = state
-    return state
   end
 
-  instance.addJunction = function (self, state_id1, state_id2)
+  local addJunction = function (self, state_id1, state_id2)
 
     local junction = {}
     if not self.junctions then self.junctions = {} end
@@ -52,16 +104,19 @@ function M.createFSM()
     junction.setCondition = function (self, stateChangeCondition)
 
       assert(type(stateChangeCondition) == "function")
-      
-      
-      
+
+
+
     end
 
 
     return junction
   end
 
-  return instance
+  return {
+    addState = addState,
+    addJunction = addJunction
+  }
 end
 
 ------------------------------------------
@@ -70,11 +125,17 @@ end
 local function main()
 
   --
-  local fsm_instance = M.createFSM()
-  local state = fsm_instance:addState("init")
-  state:addEventHandler("onEnter", function() print("Init state onEnter handler") end)
+  local newState = M.createState("initial State")
 
-  local junction = fsm_instance:addJunction("init", "running")
+  newState.addHandler("onEnter", function() print("Init state onEnter handler") end)
+  
+  newState.update()
+
+  --  local fsm_instance = M.createFSM()
+  --  local state = fsm_instance:addState("init")
+  --  state:addEventHandler("onEnter", function() print("Init state onEnter handler") end)
+  --
+  --  local junction = fsm_instance:addJunction("init", "running")
 
 
 end
