@@ -71,6 +71,16 @@ function M.createFSM()
   end
   
   
+  
+  ---------------------------------------------------------------
+  -- Updates fsm state (calls current state onUpdate handlers)
+  -- and starts verifying junctions chain.
+  -- 
+  fsm_public.update = function ()
+  	self.currentState.update()
+  	self.currentState.processJunctions()
+  end
+  
   -------------------------------------------------------------
   -- Transitions fsm to new state
   -- 
