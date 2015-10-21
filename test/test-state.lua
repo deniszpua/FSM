@@ -14,7 +14,7 @@ local state_instance
 
 
 local function before()
-	state_instance = state_module.State.createState("state 1",nill) 
+	state_instance = state_module.State.createState("state 1", {keys = {}}) 
 end
 
 
@@ -112,6 +112,42 @@ M.testOnUpdateOtherHandlersNotExecuted = function ()
 	
 	return lunit_module.assertEquals(false, handlersMock.isOnEnterExecuted or handlersMock.isOnExitExecuted)
 	
+end
+
+------------------------------------------------------------------------
+-- It should check all its junctions while executing processJunction method.
+-- 
+M.testIsJunctionCheckWhileUpdate = function ()
+  before()
+  
+  local callback = {
+    isFirstJunctionExecuted = false,
+    isSecondJunctionExecuted = false,
+    isThirdJunctionExecuted = false
+    }
+    
+    state_instance.addJunction(
+        function (state, keys)
+        	callback.isFirstJunctionExecuted = true 
+        	return false
+        end,
+        'another state')
+    state_instance.addJunction(
+        function (state, keys)
+        	callback.isSecondJunctionExecuted = true 
+        	return false
+        end,
+        'another state')
+    state_instance.addJunction(
+        function (state, keys)
+        	callback.isThirdJunctionExecuted = true 
+        	return false
+        end,
+        'another state')
+    state_instance.processJunctions()
+    
+    return lunit_module.assertEquals(true, callback.isFirstJunctionExecuted and
+            callback.isSecondJunctionExecuted and callback.isThirdJunctionExecuted)
 end
 
 
