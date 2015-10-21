@@ -19,12 +19,13 @@ function M.createFSM()
 
   -- private methods and variables
   local self = {
-    keys = {},
     states = {}
   }
 
   -- public methods and variables access object
-  local fsm_public = {}
+  local fsm_public = {
+        keys = {},
+    }
 
   ------------------------------------------------------------------------------
   -- Adds new state to current final state machine.
@@ -65,7 +66,7 @@ function M.createFSM()
   -------------------------------------------------------------
   -- fsm key setter.
   fsm_public.setKey = function (keyId, newValue)
-    self.keys[keyId] = newValue
+    fsm_public.keys[keyId] = newValue
     self.currentState.processJunctions()
   end
   
@@ -103,7 +104,7 @@ local function main()
   state2.addHandler("onEnter", function () print("state2 onEnter handler")end)
 
   local junction = junction_module.Junction.createJunction(state1.getName(), state2.getName(), fsm)
-  junction.setCondition(function(state1, keys) return true end)
+  junction.setCondition(function(state1, keys) return keys.my_var == 1 end)
   
   fsm.setKey("my_var", 1)
 

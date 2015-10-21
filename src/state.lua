@@ -98,7 +98,7 @@ M.State = {
       public.processJunctions = function ()
         if self.junctions then
           for i, junction in ipairs(self.junctions) do
-            if junction.condition() then 
+            if junction.condition(public, enclosingFsmReference.keys) then 
               return self.fsm.setNewState(junction.targetState)
               end
           end
