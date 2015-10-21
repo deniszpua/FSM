@@ -56,7 +56,9 @@ function M.createFSM()
   -- @param #function condition predicate, which will be checked to become true.
   fsm_public.addJunction = function (state_id1, state_id2, condition)
 
-    if not condition then return junction_module.Junction.createJunction(state_id1, state_id2, fsm_public) end
+    if not condition then 
+      return junction_module.Junction.createJunction(state_id1, state_id2, fsm_public) 
+    end
 
     local state = self.states[state_id1]
     state.addJunction(condition, state_id2)
@@ -90,16 +92,23 @@ function M.createFSM()
   	self.currentState.enter()
   end
   
+  --------------------------------------------------------------
+  -- Current state id getter.
+  -- 
+  fsm_public.getCurrentStateId = function ()
+  	return self.currentState.getName()
+  end
+  
   
   return fsm_public
 end
 
 ------------------------------------------
--- Unit test
-------------------------------------------
+-- Unit test 
+
+--[[
 local function main()
 
-  --
 
   local fsm = M.createFSM();
   local state1 = fsm.addState("initial State")
@@ -119,30 +128,9 @@ local function main()
   fsm.setKey("my_var", 1)
 
 
-  --[[
-  
-      addState(name_id)
-      local state = fsm.addState(“my_state”)
-      
-      
-      state.addEventHandler(onEnter, function () print (“enter”) end)
-      onEnter / onExit / onUpdate
-      
-      
-      local junction = fsm.addJunction (“my_state1”, “my_state2”)
-      junction.setCondition(function (state, keys) return keys.my_var == 1 end)
-      
-      fsm.setKey(“my_var”, 1)
-      fsm.update()
-      fsm.addJunction (“my_state1”, “my_state2”, callback)
-      fsm.addJunction(state1, state2, callback)
-        
-  
-  
-  --]]
 
 end
 
-main()
-
+--main()
+--]]
 return M
