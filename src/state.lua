@@ -4,36 +4,28 @@
 
 local M = {}
 
-local assert = assert
-local type = type
-local ipairs = ipairs
 
-__ENV = M
 
-M.State = {
 
     -------------------------------------------------------------------------------------------------
     -- State objects factory method.
-    --
-    createState = function (state_name, enclosingFsmReference)
+    -- @callof #state module
+    function M.createState(stateName, enclosingFsmReference)
 
       -- private instance variables container
       local self = {
-        name = state_name,
+        name = stateName,
         fsm = enclosingFsmReference,
         junctions = {},
         handlers = {}
       }
-
-      -- public methods access object
-      local public = {}
 
       --------------------------------------------------------------------
       -- Adds handler to events in particular state.
       --
       -- @param             eventType - possible values are ("onEnter", "onExit", "onUpdate").
       -- @param             handlerFunction - function, that will be called when specified event occurs.
-      public.addHandler = function(eventType, handlerFunction)
+      local function addHandler(eventType, handlerFunction)
 
         assert(type(eventType) == "string")
         assert(type(handlerFunction == "function"))
@@ -50,7 +42,7 @@ M.State = {
       -- @param conditon    function which should return true, when state
       --                    transition should be performed.
       -- @param targetState state, to which transition occurs.
-      public.addJunction = function (condition, targetState)
+      local function addJunction(condition, targetState)
 
         assert(type(condition) == "function")
         assert(type(targetState) == "string")
@@ -65,7 +57,7 @@ M.State = {
       ----------------------------------------------------------------------------------
       -- Triggers current state onUpdate handlers.
       --
-      public.update = function ()
+      local function update()
         self.callHandlers("onUpdate")
       end
 
@@ -73,7 +65,7 @@ M.State = {
       -----------------------------------------------------------------------------------
       -- Triggers onEnter handlers.
       --
-      public.enter = function ()
+      local function enter()
         self.callHandlers("onEnter")
       end
 
@@ -81,21 +73,21 @@ M.State = {
       ------------------------------------------------------------------------------------
       -- Triggers onExit handlers.
       --
-      public.exit = function ()
+      local function exit()
         self.callHandlers("onExit")
       end
 
       -----------------------------------------------------------
       -- State name getter.
       -- 
-      public.getName = function ()
+      local function getName()
         return self.name
       end
       
       ---------------------------------------------------------------
       -- Processes all existing current state's junctions.
       -- 
-      public.processJunctions = function ()
+      local function processJunctions()
         if self.junctions then
           for i, junction in ipairs(self.junctions) do
             if junction.condition(public, enclosingFsmReference.keys) then 
@@ -123,9 +115,17 @@ M.State = {
 
       end
 
-      return public
+      return {
+        addHandler = addHandler,
+        addJunction = addJunction,
+        enter = enter,
+        exit = exit,
+        update = update,
+        getName = getName,
+        processJunctions = processJunctions 
+      }
 
     end
-}
 
+setmetatable(M, {__call=M.createState})
 return M
