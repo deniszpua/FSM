@@ -4,27 +4,27 @@
 
 local M = {}
 
-local lunitModule = require("lunit")
-local fsmModule = require("fsm")
-
-__ENV = M
+local Lunit = require("lunit")
+local Fsm = require("fsm")
 
 
 -- FSM instance under test
-local fsm_instance
+local fsm
   -- initial state
 local state1
   -- target state, in case of testing transition, or inactive state otherwise
 local state2
 
-local function before()
-  fsm_instance = fsmModule.createFSM()
-  
-  state1 = fsm_instance.addState("state 1")
-  state2 = fsm_instance.addState("state 2")
 
-  fsm_instance.addJunction("state 1", "state 2",
+local function before()
+  fsm = Fsm()
+  
+  state1 = fsm.addState("state 1")
+  state2 = fsm.addState("state 2")
+
+  fsm.addJunction("state 1", "state 2",
     function (state, keys) return keys.myVar == "move to state2" end)
+    
 end
 ---------------------------------------------------------------------
 -- It should transition from one state to another, when junction
@@ -33,8 +33,8 @@ M.testTransitionBetweenStates = function ()
 
   before()
 
-  fsm_instance.setKey("myVar", "move to state2")
-  return lunitModule.assertEquals("state 2",fsm_instance.getCurrentStateId())
+  fsm.setKey("myVar", "move to state2")
+  return Lunit.assertEquals("state 2",fsm.getCurrentStateId())
 end
 
 -----------------------------------------------------------------------
@@ -46,8 +46,8 @@ M.testCallOnExitHandlers = function ()
 	
 	local handlersMock = {isExecuted = false}
 	state1.addHandler('onExit', function() handlersMock.isExecuted = true end)
-  fsm_instance.setKey("myVar", "move to state2")
-  return lunitModule.assertEquals(true, handlersMock.isExecuted)
+  fsm.setKey("myVar", "move to state2")
+  return Lunit.assertEquals(true, handlersMock.isExecuted)
 end
 
 -------------------------------------------------------------------------
@@ -59,8 +59,8 @@ M.testCallOnEnterExecuted = function ()
 	
 	local handlersMock = {isExecuted = false}
 	state2.addHandler('onEnter', function() handlersMock.isExecuted = true end)
-  fsm_instance.setKey("myVar", "move to state2")
-  return lunitModule.assertEquals(true, handlersMock.isExecuted)
+  fsm.setKey("myVar", "move to state2")
+  return Lunit.assertEquals(true, handlersMock.isExecuted)
 end 
 
 
@@ -73,7 +73,7 @@ M.testCallOnUpdateExecuted = function ()
   	
 	local handlersMock = {isExecuted = false}
 	state1.addHandler('onUpdate', function() handlersMock.isExecuted = true end)
-  return lunitModule.assertEquals(true, handlersMock.isExecuted)
+  return Lunit.assertEquals(true, handlersMock.isExecuted)
 end 
 
 --------------------------------------------------------------------------
@@ -85,7 +85,7 @@ M.testCallOnUpdateExecuted = function ()
   	
 	local handlersMock = {isExecuted = false}
 	state2.addHandler('onUpdate', function() handlersMock.isExecuted = true end)
-  return lunitModule.assertEquals(false, handlersMock.isExecuted)
+  return Lunit.assertEquals(false, handlersMock.isExecuted)
 end 
 
 --------------------------------------------------------------------------------
@@ -95,10 +95,10 @@ M.testJunctionsExecutedOnUpdate = function ()
 	before()
 	
 	local junctionMock = {isExecuted = false}
-	fsm_instance.addJunction('state 1', 'state 2', 
+	fsm.addJunction('state 1', 'state 2', 
 	   function (state, keys) junctionMock.isExecuted = true return false end)
-   fsm_instance.update()
-  return lunitModule.assertEquals(true, junctionMock.isExecuted)
+   fsm.update()
+  return Lunit.assertEquals(true, junctionMock.isExecuted)
 end
 
 
@@ -109,12 +109,14 @@ end
 M.testChangesStateOnUpdate = function ()
 	before()
 	
-	fsm_instance.addJunction('state 1', 'state 2', 
+	fsm.addJunction('state 1', 'state 2', 
 	                         function (state, keys) return true end)
-   fsm_instance.update()
-  return lunitModule.assertEquals('state 2', fsm_instance.getCurrentStateId())
+   fsm.update()
+  return Lunit.assertEquals('state 2', fsm.getCurrentStateId())
 	
 end
+
+
 
 return M
 
