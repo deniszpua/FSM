@@ -5,6 +5,9 @@ local M = {}
 
 local json = require("dkjson")
 local path = require("path")
+
+local io = io 
+local assert = assert
 local print = print
 local pairs = pairs
 local error = error
@@ -65,8 +68,8 @@ function main()
       }
   }]]
 
---  local loadedObject = M.loadJsonData(jsonString)
---  print(objToString(loadedObject))
+    local loadedObject = M.loadJsonData(M.loadStringFromFile('/home/dev-user/Desktop/sample.json'))
+    print(objToString(loadedObject))
 
 end
 
@@ -79,8 +82,13 @@ function M.loadJsonData(jsonString)
     return obj
   end
 
+end
 
-
+function M.loadStringFromFile(pathToJsonFile)
+	local file =  assert(io.open(pathToJsonFile, "r"))
+	local str = file:read("*a")
+	file:close()
+	return str
 end
 
 
