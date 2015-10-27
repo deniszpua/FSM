@@ -36,13 +36,6 @@ local function objToString(obj)
 
 end
 
-function main()
-
-  local loadedObject = M.loadJsonData(M.loadStringFromFile('/home/dev-user/Desktop/sample.json'))
-  print(objToString(loadedObject))
-
-end
-
 ---
 -- Creates object that represents entity, described by specified jsonString.
 --
@@ -51,6 +44,7 @@ end
 -- @return #table table, which structure was described by json and with specified keys
 -- and values
 function M.loadJsonData(jsonString)
+  jsonString = string.lower(jsonString)
   local obj, pos, err = json.decode(jsonString)
   if err then
     error("Cannot parse json")
@@ -65,13 +59,12 @@ end
 ---
 -- Loads string from file.
 --
--- Current implementation is case-insensitive. "~" sign in path is not supported
--- (standart io library limitation).
+-- "~" sign in path is not supported (standart io library limitation).
 function M.loadStringFromFile(pathToJsonFile)
   local file =  assert(io.open(pathToJsonFile, "r"))
   local str = file:read("*a")
   file:close()
-  return string.lower(str)
+  return str
 end
 
 ---
@@ -81,7 +74,6 @@ end
 -- @return #table with conditional predicates instead of their code snippets
 function M.recognizeConditions(fsm)
 
-  -- traverse fsm -> states [foreach state -> junctions [foreach junction -> condition => func]
   local states = fsm.states
 
   if states then
@@ -104,7 +96,5 @@ function M.recognizeConditions(fsm)
 
 end
 
-
-main()
 
 return M
