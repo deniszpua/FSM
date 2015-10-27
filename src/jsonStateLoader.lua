@@ -97,4 +97,23 @@ function M.recognizeConditions(fsm)
 end
 
 
+function M.recognizeHandlers(fsm)
+  if fsm.states then
+    for state in fsm.states do
+      if state.handlers then
+        for handler in state.handlers do
+          local action = load(handler.action)
+          if action then
+            handler.action = action
+          else
+            error(string.format("%s handler for state % is not recognized",
+             handler.event, state.name))
+          end
+        end
+      end
+    end
+  end
+  return fsm
+end
+
 return M
