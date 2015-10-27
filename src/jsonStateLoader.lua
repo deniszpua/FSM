@@ -80,7 +80,7 @@ function M.recognizeConditions(fsm)
     for _, state in pairs(states) do
       if state.junctions then
         for _, junction in pairs(state.junctions) do
-          local conditionCode = load(junction.condition)
+          local conditionCode = load("return " .. junction.condition)
           if not conditionCode then
             error(string.format("Condition for state: %s not recognized", state.name))
           else
