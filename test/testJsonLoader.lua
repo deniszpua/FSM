@@ -4,13 +4,13 @@ jsonStateLoader = require("jsonStateLoader")
 local M = {}
 
 local function main()
-	print(string.format("Load obj from string test:\t%s", M.testStringStructuer() and "O.K." or "Failed"))
+	print(string.format("Load obj from string test:\t%s", M.testStringStructure() and "O.K." or "Failed"))
 	print(string.format("Recognize conditions test:\t%s", M.testRecognizeConditions() and "O.K." or "Failed"))
 	print(string.format("Recognize handlers test:\t%s", M.testRecognizeHandlers() and "O.K." or "Failed"))
 end
 
 --- It should create object with structure, specified in json string
-function M.testStringStructuer()
+function M.testStringStructure()
 
   local testString = 
   [[{"FSM": {
@@ -38,16 +38,18 @@ end
 
 -- It should recognize handlers correctly
 function M.testRecognizeHandlers()
-  local handlerMock = {actionPerformed = false}
+  handlermock = {actionPerformed = false}
   local fsm = {
           states={
                 {name = "state 1", junctions = {{condition = "true", state = "state 2"}}},
-                {name = "state 2", handlers={event="onenter", action = "handlermock.actionPerformed = true)"}}
+                {name = "state 2", handlers={{event="onenter", action = "handlermock.actionPerformed = true"}}}
                 }
               }
-  fsm = jsonStateLoader.recognizeHandlers(fsm)            
-	return lunit.assertEquals(true,handlerMock.actionPerformed)
+  fsm = jsonStateLoader.recognizeHandlers(fsm) 
+  fsm.states[2].handlers[1].action()           
+	return lunit.assertEquals(true,handlermock.actionPerformed)
 end
+
 
 
 

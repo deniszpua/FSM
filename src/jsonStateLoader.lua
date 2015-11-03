@@ -11,6 +11,7 @@ local assert = assert
 local load = load
 local print = print
 local pairs = pairs
+local ipairs = ipairs
 local error = error
 local string = string
 local type = type
@@ -99,9 +100,9 @@ end
 
 function M.recognizeHandlers(fsm)
   if fsm.states then
-    for state in fsm.states do
+    for _, state in ipairs(fsm.states) do
       if state.handlers then
-        for handler in state.handlers do
+        for _, handler in pairs(state.handlers) do
           local action = load(handler.action)
           if action then
             handler.action = action
