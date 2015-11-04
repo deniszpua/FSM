@@ -3,9 +3,8 @@
 -- @module test-fsm
 
 local M = {}
-
-local Lunit = require("lunit")
-local Fsm = require("fsm")
+local assertions = require("testing.assertions")
+local Fsm = require("main.fsm")
 
 
 -- FSM instance under test
@@ -34,7 +33,7 @@ M.testTransitionBetweenStates = function ()
   before()
 
   fsm.setKey("myVar", "move to state2")
-  return Lunit.assertEquals("state 2",fsm.getCurrentStateId())
+  return assertions.assertEquals("state 2",fsm.getCurrentStateId())
 end
 
 -----------------------------------------------------------------------
@@ -47,7 +46,7 @@ M.testCallOnExitHandlers = function ()
 	local handlersMock = {isExecuted = false}
 	state1.addHandler('onExit', function() handlersMock.isExecuted = true end)
   fsm.setKey("myVar", "move to state2")
-  return Lunit.assertEquals(true, handlersMock.isExecuted)
+  return assertions.assertEquals(true, handlersMock.isExecuted)
 end
 
 -------------------------------------------------------------------------
@@ -60,7 +59,7 @@ M.testCallOnEnterExecuted = function ()
 	local handlersMock = {isExecuted = false}
 	state2.addHandler('onEnter', function() handlersMock.isExecuted = true end)
   fsm.setKey("myVar", "move to state2")
-  return Lunit.assertEquals(true, handlersMock.isExecuted)
+  return assertions.assertEquals(true, handlersMock.isExecuted)
 end 
 
 
@@ -73,7 +72,7 @@ M.testCallOnUpdateExecuted = function ()
   	
 	local handlersMock = {isExecuted = false}
 	state1.addHandler('onUpdate', function() handlersMock.isExecuted = true end)
-  return Lunit.assertEquals(true, handlersMock.isExecuted)
+  return assertions.assertEquals(true, handlersMock.isExecuted)
 end 
 
 --------------------------------------------------------------------------
@@ -85,7 +84,7 @@ M.testCallOnUpdateExecuted = function ()
   	
 	local handlersMock = {isExecuted = false}
 	state2.addHandler('onUpdate', function() handlersMock.isExecuted = true end)
-  return Lunit.assertEquals(false, handlersMock.isExecuted)
+  return assertions.assertEquals(false, handlersMock.isExecuted)
 end 
 
 --------------------------------------------------------------------------------
@@ -98,7 +97,7 @@ M.testJunctionsExecutedOnUpdate = function ()
 	fsm.addJunction('state 1', 'state 2', 
 	   function (state, keys) junctionMock.isExecuted = true return false end)
    fsm.update()
-  return Lunit.assertEquals(true, junctionMock.isExecuted)
+  return assertions.assertEquals(true, junctionMock.isExecuted)
 end
 
 
@@ -112,7 +111,7 @@ M.testChangesStateOnUpdate = function ()
 	fsm.addJunction('state 1', 'state 2', 
 	                         function (state, keys) return true end)
    fsm.update()
-  return Lunit.assertEquals('state 2', fsm.getCurrentStateId())
+  return assertions.assertEquals('state 2', fsm.getCurrentStateId())
 	
 end
 

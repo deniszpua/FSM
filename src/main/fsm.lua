@@ -5,12 +5,12 @@
 ------------------------------------------------------------
 local M = {}
 
-local State = require("state")
-local Junction = require("junction")
+local State = require("main.state")
+local Junction = require("main.junction")
 
 local json = require("dkjson")
 
-local path = require("path")
+local path = require("common.path")
 
 local io = io
 local assert = assert
