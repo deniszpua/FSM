@@ -4,8 +4,8 @@
 
 local M = {}
 
-local State = require("state")
-local lunit_module = require("lunit")
+local State = require("main.state")
+local Assertions = require("testing.assertions")
 
 
 -- state instance under test
@@ -28,7 +28,7 @@ M.testOnEnterHandlers = function ()
 	         function () onEnterHandlersMock.isExecuted = true end)
   state.enter()
 	         
- return lunit_module.assertEquals(true, onEnterHandlersMock.isExecuted)
+ return Assertions.assertEquals(true, onEnterHandlersMock.isExecuted)
 end
 
 --------------------------------------------------------------------
@@ -42,7 +42,7 @@ M.testOnExitHandlers = function ()
 	         function () onEnterHandlersMock.isExecuted = true end)
   state.exit()
 	         
- return lunit_module.assertEquals(true, onEnterHandlersMock.isExecuted)
+ return Assertions.assertEquals(true, onEnterHandlersMock.isExecuted)
 end
 
 --------------------------------------------------------------------
@@ -56,7 +56,7 @@ M.testOnUpdateHandlers = function ()
 	         function () onEnterHandlersMock.isExecuted = true end)
   state.update()
 	         
- return lunit_module.assertEquals(true, onEnterHandlersMock.isExecuted)
+ return Assertions.assertEquals(true, onEnterHandlersMock.isExecuted)
 end
 
 --------------------------------------------------------------------
@@ -73,7 +73,7 @@ M.testOnEnterOtherHandlersNotExecuted = function ()
 	state.addHandler('onUpdate', function () handlersMock.isOnUpdateExecuted = true end)
 	state.enter()
 	
-	return lunit_module.assertEquals(false, handlersMock.isOnExitExecuted or handlersMock.isOnUpdateExecuted)
+	return Assertions.assertEquals(false, handlersMock.isOnExitExecuted or handlersMock.isOnUpdateExecuted)
 	
 end
 
@@ -91,7 +91,7 @@ M.testOnExitOtherHandlersNotExecuted = function ()
 	state.addHandler('onUpdate', function () handlersMock.isOnUpdateExecuted = true end)
 	state.exit()
 	
-	return lunit_module.assertEquals(false, handlersMock.isOnEnterExecuted or handlersMock.isOnUpdateExecuted)
+	return Assertions.assertEquals(false, handlersMock.isOnEnterExecuted or handlersMock.isOnUpdateExecuted)
 	
 end
 
@@ -109,7 +109,7 @@ M.testOnUpdateOtherHandlersNotExecuted = function ()
 	state.addHandler('onExit', function () handlersMock.isOnExitExecuted = true end)
 	state.update()
 	
-	return lunit_module.assertEquals(false, handlersMock.isOnEnterExecuted or handlersMock.isOnExitExecuted)
+	return Assertions.assertEquals(false, handlersMock.isOnEnterExecuted or handlersMock.isOnExitExecuted)
 	
 end
 
@@ -145,7 +145,7 @@ M.testIsJunctionCheckWhileUpdate = function ()
         'another state')
     state.processJunctions()
     
-    return lunit_module.assertEquals(true, callback.isFirstJunctionExecuted and
+    return Assertions.assertEquals(true, callback.isFirstJunctionExecuted and
             callback.isSecondJunctionExecuted and callback.isThirdJunctionExecuted)
 end
 

@@ -4,7 +4,7 @@
 local M = {}
 
 local json = require("dkjson")
-local path = require("path")
+local path = require("common.path")
 
 local io = io
 local assert = assert

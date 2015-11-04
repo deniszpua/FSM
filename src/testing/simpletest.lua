@@ -19,6 +19,8 @@ function M.main(arg)
   -- convert string to list
   local parser = {}
   for argument in string.gmatch(arg, '[^ ]+%s*') do
+    -- deleting trailing spaces
+    if string.find(argument, '%s') then argument = string.gsub(argument, '%s', '') end
     parser[#parser + 1] = argument
   end
   arg = parser
@@ -132,6 +134,6 @@ end
 
 --Run in IDE
 --M.main('pathfile=/Users/denis/workspace/lua_tutorial/FSM/buildpath '
---      .. 'main.test-fsm.lua')
+--      .. 'main.test-fsm.lua main.test-state.lua main.testJsonLoader.lua')
 
 return M

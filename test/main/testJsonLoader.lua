@@ -1,5 +1,5 @@
-lunit = require("lunit")
-jsonStateLoader = require("jsonStateLoader")
+local Assertions = require("testing.assertions")
+local jsonStateLoader = require("main.jsonStateLoader")
 
 local M = {}
 
@@ -19,7 +19,7 @@ function M.testStringStructure()
     }}
   ]]
 	local resultObj = jsonStateLoader.loadJsonData(testString)
-	return lunit.assertEquals(true, #resultObj.states == 3 and resultObj.startstate == "init")
+	return Assertions.assertEquals(true, #resultObj.states == 3 and resultObj.startstate == "init")
 end
 
 --- It should recognize conditions, that stored in json fields
@@ -32,7 +32,7 @@ function M.testRecognizeConditions()
                 }
               }
   
-	return lunit.assertEquals(true,(jsonStateLoader.recognizeConditions(fsm)).states[1].junctions[1].condition())
+	return Assertions.assertEquals(true,(jsonStateLoader.recognizeConditions(fsm)).states[1].junctions[1].condition())
 	
 end
 
@@ -47,7 +47,7 @@ function M.testRecognizeHandlers()
               }
   fsm = jsonStateLoader.recognizeHandlers(fsm) 
   fsm.states[2].handlers[1].action()           
-	return lunit.assertEquals(true,handlermock.actionPerformed)
+	return Assertions.assertEquals(true,handlermock.actionPerformed)
 end
 
 
