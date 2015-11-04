@@ -23,24 +23,24 @@ else
 end
 
 --- Helper function for debugging
-local function objToString(obj)
-  local result = "{"
-  for k, v in pairs(obj) do
-    if type(v) ~= "table" then
-      result = result .. string.format("%s : %s, ", k, v)
-    else
-      result = result .. string.format("%s: %s, ", k, objToString(v))
-    end
-  end
-  result = result .. "}"
-  return result
-
-end
+--local function objToString(obj)
+--  local result = "{"
+--  for k, v in pairs(obj) do
+--    if type(v) ~= "table" then
+--      result = result .. string.format("%s : %s, ", k, v)
+--    else
+--      result = result .. string.format("%s: %s, ", k, objToString(v))
+--    end
+--  end
+--  result = result .. "}"
+--  return result
+--
+--end
 
 ---
 -- Creates object that represents entity, described by specified jsonString.
 --
--- Uses dkjson library, that should be on project's build path.
+-- Uses dkjson library, that should be present on project's build path.
 -- @param #string jsonString valid json string representation of object
 -- @return #table table, which structure was described by json and with specified keys
 -- and values
