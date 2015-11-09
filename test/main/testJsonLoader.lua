@@ -38,15 +38,15 @@ end
 
 -- It should recognize handlers correctly
 function M.testRecognizeHandlers()
-  handlermock = {actionPerformed = false}
+  local handlermock = {actionPerformed = false}
   local fsm = {
           states={
                 {name = "state 1", junctions = {{condition = "true", state = "state 2"}}},
-                {name = "state 2", handlers={{event="onenter", action = "handlermock.actionPerformed = true"}}}
+                {name = "state 2", handlers={{event="onenter", action = "(...).actionPerformed = true"}}}
                 }
               }
   fsm = jsonStateLoader.recognizeHandlers(fsm) 
-  fsm.states[2].handlers[1].action()           
+  fsm.states[2].handlers[1].action(handlermock)           
 	return Assertions.assertEquals(true,handlermock.actionPerformed)
 end
 
