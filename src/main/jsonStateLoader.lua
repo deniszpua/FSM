@@ -1,5 +1,5 @@
-------------------------------
---
+----------------------------------------------------------
+-- Helper functions for parsing fsm state from json string
 -- @module jsonStateLoader
 local M = {}
 
