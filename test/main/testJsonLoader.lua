@@ -3,11 +3,6 @@ local jsonStateLoader = require("main.jsonStateLoader")
 
 local M = {}
 
-local function main()
-	print(string.format("Load obj from string test:\t%s", M.testStringStructure() and "O.K." or "Failed"))
-	print(string.format("Recognize conditions test:\t%s", M.testRecognizeConditions() and "O.K." or "Failed"))
-	print(string.format("Recognize handlers test:\t%s", M.testRecognizeHandlers() and "O.K." or "Failed"))
-end
 
 --- It should create object with structure, specified in json string
 function M.testStringStructure()
@@ -53,5 +48,4 @@ end
 
 
 
---main()
 return M

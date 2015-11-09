@@ -22,21 +22,6 @@ else
   _ENV = M -- for 5.2
 end
 
---- Helper function for debugging
---local function objToString(obj)
---  local result = "{"
---  for k, v in pairs(obj) do
---    if type(v) ~= "table" then
---      result = result .. string.format("%s : %s, ", k, v)
---    else
---      result = result .. string.format("%s: %s, ", k, objToString(v))
---    end
---  end
---  result = result .. "}"
---  return result
---
---end
-
 ---
 -- Creates object that represents entity, described by specified jsonString.
 --
