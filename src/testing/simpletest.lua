@@ -78,8 +78,8 @@ function runner.run(arg, path)
     local moduleUnderTest = require(arg[i])
     local testResult = testRunner:runTestSuite(moduleUnderTest)
     print(string.format("\nMoudle under test is %s:", arg[i]))
-    for key, var in pairs(testResult) do
-      print(string.format("%10s: %s", key, var))
+    for _, key in pairs({"OK", "Failed", "Exception"}) do
+      print(string.format("%10s: %s", key, testResult[key]))
     end
   end
 
