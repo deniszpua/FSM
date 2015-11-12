@@ -1,5 +1,5 @@
 local Assertions = require("testing.assertions")
-local jsonStateLoader = require("main.jsonStateLoader")
+local jsonStateLoader = require("main.jsonhelper")
 
 local M = {}
 
@@ -8,13 +8,13 @@ local M = {}
 function M.testStringStructure()
 
   local testString = 
-  [[{"FSM": {
-      "States":[{"Name":"init"}, {"name":"zombie"}, {"name":"running"}],
-      "StartState":"init"
+  [[{"fsm": {
+      "states":[{"name":"init"}, {"name":"zombie"}, {"name":"running"}],
+      "startState":"init"
     }}
   ]]
 	local resultObj = jsonStateLoader.loadJsonData(testString)
-	return Assertions.assertEquals(true, #resultObj.states == 3 and resultObj.startstate == "init")
+	return Assertions.assertEquals(true, #resultObj.states == 3 and resultObj.startState == "init")
 end
 
 --- It should recognize conditions, that stored in json fields
@@ -22,7 +22,7 @@ function M.testRecognizeConditions()
 
   local fsm = {
           states={
-                {name = "state 1", junctions = {{condition = "true", state = "state 2"}}},
+                {name = "state 1", junctions = {{condition = "return true", state = "state 2"}}},
                 {name = "state 2"}
                 }
               }
@@ -34,14 +34,14 @@ end
 -- It should recognize handlers correctly
 function M.testRecognizeHandlers()
   local handlermock = {actionPerformed = false}
-  local fsm = {
+  local frankenstein = {
           states={
                 {name = "state 1", junctions = {{condition = "true", state = "state 2"}}},
-                {name = "state 2", handlers={{event="onenter", action = "(...).actionPerformed = true"}}}
+                {name = "state 2", handlers={{event="onEnter", action = "local keys = ... keys.actionPerformed = true"}}}
                 }
               }
-  fsm = jsonStateLoader.recognizeHandlers(fsm) 
-  fsm.states[2].handlers[1].action(handlermock)           
+  frankenstein = jsonStateLoader.recognizeHandlers(frankenstein) 
+  frankenstein.states[2].handlers[1].action(handlermock)           
 	return Assertions.assertEquals(true,handlermock.actionPerformed)
 end
 

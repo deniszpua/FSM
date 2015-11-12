@@ -115,6 +115,30 @@ M.testChangesStateOnUpdate = function ()
 	
 end
 
+----------------------------------------------------------------------------
+-- Functional tests
+----------------------------------------------------------------------------
+
+M.testLoadsStateFromFSMString = function ()
+
+  local input = [[
+                    {"fsm": 
+                      {"states":[
+                        {"name":"initialState", 
+                            "junctions":[{"condition":"local state, keys = ... return keys.shouldChangeState", "state":"targetState"},
+                                         {"condition":"return false", "state":"nonTargetState"}],
+                            "handlers":[{"event":"onUpdate", "action":"local keys = ... keys.shouldChangeState=true"}]
+                          },
+                        {"name":"targetState", "handlers":[{"event":"onEnter", "action":"local keys = ... keys.enteredTargetState = true"}]}],
+                         "startState":"initialState"
+                       }
+                     }
+                 ]]
+  local fsm = Fsm.loadFSMFromJson(input)
+  fsm.update()
+  return assertions.assertEquals(true,fsm.keys.enteredTargetState and (fsm.getCurrentStateId() == "targetState"))
+end
+
 
 
 return M

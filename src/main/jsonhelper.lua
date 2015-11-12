@@ -30,12 +30,13 @@ end
 -- @return #table table, which structure was described by json and with specified keys
 -- and values
 function M.loadJsonData(jsonString)
-  jsonString = string.lower(jsonString)
+--  jsonString = string.lower(jsonString)
   local obj, pos, err = json.decode(jsonString)
   if err then
     error("Cannot parse json")
   else
-    if obj.fsm ~= nil then obj = obj.fsm end
+    if obj.fsm then obj = obj.fsm end
+    
     return obj
   end
 
@@ -66,7 +67,7 @@ function M.recognizeConditions(fsm)
     for _, state in pairs(states) do
       if state.junctions then
         for _, junction in pairs(state.junctions) do
-          local conditionCode = load("return " .. junction.condition)
+          local conditionCode = load(junction.condition)
           if not conditionCode then
             error(string.format("Condition for state: %s not recognized", state.name))
           else
@@ -92,7 +93,7 @@ function M.recognizeHandlers(fsm)
           if action then
             handler.action = action
           else
-            error(string.format("%s handler for state % is not recognized",
+            error(string.format("%s handler for state %s is not recognized",
              handler.event, state.name))
           end
         end

@@ -8,7 +8,7 @@ local M = {}
 local State = require("main.state")
 local Junction = require("main.junction")
 
-local json = require("dkjson")
+local JsonHelper = require("main.jsonhelper")
 
 local path = require("common.path")
 
@@ -116,11 +116,62 @@ function M.createFSM()
     return self.currentState.getName()
   end
 
+  ---
+  -- Changes current state to current without triggering any event
+  --
+  function fsm_public.rawSetCurrentState(targetStateId)
+    if self.states[targetStateId] then
+      local targetStateInstance = self.states[targetStateId] 
+      self.currentState = targetStateInstance
+    else
+      error(string.format("State %s is not valid state name", targetStateId))
+    end
+  end
 
 
 
   return fsm_public
 end
+
+------------------------------------------------------------------
+-- Returns fsm instance with state, described by given jsonString
+-- @param #string jsonString valid json string that match following pattern
+--    {"FSM": {"States":[{"Name":"state1Name", "junctions":[{"condition":"false', "state":"targetState"}, ...],
+--      "handlers":{{"event":"onEnter", "action":"..."}, ... }},
+--     {"name":"targetState"}], "StartState":"init"}}
+function M.loadFSMFromJson(jsonString)
+  local jsonTemplate = JsonHelper.loadJsonData(jsonString)
+
+  if jsonTemplate then
+    jsonTemplate = JsonHelper.recognizeConditions(jsonTemplate)
+    jsonTemplate = JsonHelper.recognizeHandlers(jsonTemplate)
+  end
+
+  local fsmInstance = M.createFSM()
+  if jsonTemplate then
+    for _, state in pairs(jsonTemplate.states) do
+      local newState = fsmInstance.addState(state.name)
+      if state.junctions then
+        for _, junction in pairs(state.junctions) do
+          newState.addJunction(junction.condition, junction.state)
+        end
+      end
+      if state.handlers then
+        for _, handler in pairs(state.handlers) do
+          newState.addHandler(handler.event, handler.action)
+        end
+      end
+    end
+  end
+
+  if jsonTemplate.startState then
+    fsmInstance.rawSetCurrentState(jsonTemplate.startState)
+  end
+
+  return fsmInstance
+
+end
+
 
 setmetatable(M, {__call = M.createFSM})
 

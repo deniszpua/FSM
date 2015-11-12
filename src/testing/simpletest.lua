@@ -91,7 +91,7 @@ end
 --
 -- @param #function     methodUnderTest one of frameworks assertions
 -- @return #table       testCase object
---
+-- 
 function runner.getTestObject (methodUnderTest)
   local obj = {method = methodUnderTest}
   obj.runTest = function (self)

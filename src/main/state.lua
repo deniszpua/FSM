@@ -19,13 +19,14 @@ local M = {}
         junctions = {},
         handlers = {}
       }
-
+      -- state's public methods accessor
+      local public = {}
       --------------------------------------------------------------------
       -- Adds handler to events in particular state.
       --
       -- @param             eventType - possible values are ("onEnter", "onExit", "onUpdate").
       -- @param             handlerFunction - function, that will be called when specified event occurs.
-      local function addHandler(eventType, handlerFunction)
+      function public.addHandler(eventType, handlerFunction)
 
         assert(type(eventType) == "string")
         assert(type(handlerFunction == "function"))
@@ -42,7 +43,7 @@ local M = {}
       -- @param conditon    function which should return true, when state
       --                    transition should be performed.
       -- @param targetState state, to which transition occurs.
-      local function addJunction(condition, targetState)
+      function public.addJunction(condition, targetState)
 
         assert(type(condition) == "function")
         assert(type(targetState) == "string")
@@ -57,7 +58,7 @@ local M = {}
       ----------------------------------------------------------------------------------
       -- Triggers current state onUpdate handlers.
       --
-      local function update()
+      function public.update()
         self.callHandlers("onUpdate")
       end
 
@@ -65,7 +66,7 @@ local M = {}
       -----------------------------------------------------------------------------------
       -- Triggers onEnter handlers.
       --
-      local function enter()
+      function public.enter()
         self.callHandlers("onEnter")
       end
 
@@ -73,23 +74,23 @@ local M = {}
       ------------------------------------------------------------------------------------
       -- Triggers onExit handlers.
       --
-      local function exit()
+      function public.exit()
         self.callHandlers("onExit")
       end
 
       -----------------------------------------------------------
       -- State name getter.
       -- 
-      local function getName()
+      function public.getName()
         return self.name
       end
       
       ---------------------------------------------------------------
       -- Processes all existing current state's junctions.
       -- 
-      local function processJunctions()
+      function public.processJunctions()
         if self.junctions then
-          for i, junction in ipairs(self.junctions) do
+          for _, junction in pairs(self.junctions) do
             if junction.condition(public, enclosingFsmReference.keys) then 
               return self.fsm.setNewState(junction.targetState)
               end
@@ -108,22 +109,14 @@ local M = {}
         assert(isValidArguments, "eventId should be one of 'onEnter', 'onExit', 'onUpdate'")
 
         if self.handlers[eventId] then
-          for i, handler in ipairs(self.handlers[eventId]) do
-            handler()
+          for i, handler in pairs(self.handlers[eventId]) do
+            handler(enclosingFsmReference.keys)
           end
         end
 
       end
 
-      return {
-        addHandler = addHandler,
-        addJunction = addJunction,
-        enter = enter,
-        exit = exit,
-        update = update,
-        getName = getName,
-        processJunctions = processJunctions 
-      }
+      return public
 
     end
 
