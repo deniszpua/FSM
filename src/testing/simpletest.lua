@@ -133,11 +133,11 @@ function runner.createTestRunner()
 end
 
 --Run in IDE
-local testSuitesToRun = ''
-      .. 'main.test-fsm.lua '
-      .. 'main.test-state.lua '
-      .. 'main.testJsonLoader.lua'
-M.main('pathfile=/Users/denis/workspace/lua_tutorial/FSM/buildpath '
-      .. testSuitesToRun)
+--local testSuitesToRun = ''
+--      .. 'main.test-fsm.lua '
+--      .. 'main.test-state.lua '
+--      .. 'main.testJsonLoader.lua'
+--M.main('pathfile=/Users/denis/workspace/lua_tutorial/FSM/buildpath '
+--      .. testSuitesToRun)
 
 return M

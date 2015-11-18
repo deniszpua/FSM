@@ -125,8 +125,8 @@ M.testLoadsStateFromFSMString = function ()
                     {"fsm": 
                       {"states":[
                         {"name":"initialState", 
-                            "junctions":[{"condition":"local state, keys = ... return keys.shouldChangeState", "state":"targetState"},
-                                         {"condition":"return false", "state":"nonTargetState"}],
+                            "junctions":[{"condition":"function(state, keys) return keys.shouldChangeState", "state":"targetState"},
+                                         {"condition":"function(state, keys) return false", "state":"nonTargetState"}],
                             "handlers":[{"event":"onUpdate", "action":"function(keys) keys.shouldChangeState=true"}]
                           },
                         {"name":"targetState", "handlers":[{"event":"onEnter", "action":"function(keys) keys.enteredTargetState = true"}]}],
