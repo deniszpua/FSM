@@ -22,7 +22,7 @@ function M.testRecognizeConditions()
 
   local fsm = {
           states={
-                {name = "state 1", junctions = {{condition = "return true", state = "state 2"}}},
+                {name = "state 1", junctions = {{condition = "function(state, keys) return true", state = "state 2"}}},
                 {name = "state 2"}
                 }
               }
