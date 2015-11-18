@@ -37,7 +37,7 @@ function M.testRecognizeHandlers()
   local frankenstein = {
           states={
                 {name = "state 1", junctions = {{condition = "true", state = "state 2"}}},
-                {name = "state 2", handlers={{event="onEnter", action = "local keys = ... keys.actionPerformed = true"}}}
+                {name = "state 2", handlers={{event="onEnter", action = "function(keys) keys.actionPerformed = true"}}}
                 }
               }
   frankenstein = jsonStateLoader.recognizeHandlers(frankenstein) 

@@ -89,9 +89,9 @@ function M.recognizeHandlers(fsm)
     for _, state in ipairs(fsm.states) do
       if state.handlers then
         for _, handler in pairs(state.handlers) do
-          local action = load(handler.action)
+          local action = load('return ' .. handler.action .. ' end')
           if action then
-            handler.action = action
+            handler.action = action()
           else
             error(string.format("%s handler for state %s is not recognized",
              handler.event, state.name))
