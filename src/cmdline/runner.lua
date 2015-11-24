@@ -32,9 +32,9 @@ function M.main()
   end
   
   local fsm = Fsm.loadFSMFromJson(JsonHelper.loadStringFromFile(sourceFileName))
-  print(fsm.getCurrentStateId())
+  fsm.update()
 
-    
+  
 end
 
 function showSourceInputPromtAndRead()

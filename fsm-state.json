@@ -1,1 +1,1 @@
-{"fsm": {"states": [{"name":"init"}], "startState": "init"}}
+{"fsm": {"states": [{"name":"idle", "junctions":[{"condition":"function(state, keys) return keys.isKeyDownPressed", "state":"bowed"}], "handlers": [{"event":"onUpdate", "action":"function(keys) print([[In idle state]])"}]}, {"name":"bowed", "junctions":[{"condition":"function(state, keys) return not keys.isKeyDownPressed", "state":"idle"}], "handlers":[{"event":"onUpdate", "action":"function(keys) print([[In bowed state]])"}]}], "startState": "idle"}}
