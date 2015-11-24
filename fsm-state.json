@@ -1,0 +1,44 @@
+{"fsm": {"states": [
+                    {"name":"idle", "junctions":[
+                                                 {"condition":"function(state, keys) return keys.isKeyDownPressed", "state":"bowed"},
+                                                 {"condition":"function(state, keys) return keys.isKeyRightPressed", "state":"going"}
+                                                 ],
+                                    "handlers": [
+                                                 {"event":"onEnter", "action":"function(keys) print([[>>Entering idle state]])"},
+                                                 {"event":"onUpdate", "action":"function(keys) print([[>>In idle state]])"},
+                                                 {"event":"onExit", "action":"function(keys) print([[>>Preparing to living idle state]])"},
+                                                 
+                                                 ]
+                    },
+                    {"name":"bowed", "junctions":[
+                                                  {"condition":"function(state, keys) return not keys.isKeyDownPressed", "state":"idle"},
+                                                 {"condition":"function(state, keys) return keys.isKeyRightPressed", "state":"crawling"}
+                                                  ],
+                                    "handlers":[
+                                                {"event":"onEnter", "action":"function(keys) print([[>>Entering bowed state]])"},
+                                                {"event":"onUpdate", "action":"function(keys) print([[>>In bowed state]])"},
+                                                {"event":"onExit", "action":"function(keys) print([[>>Exiting bowed state]])"}
+                                                ]
+                    },
+                    {"name":"going", "junctions":[
+                    							 {"condition":"function(state, keys) return keys.isKeyDownPressed or not keys.isKeyRightPressed", "state":"idle"}
+                    							 ],
+                                    "handlers":[
+                                                {"event":"onEnter", "action":"function(keys) print([[>>Entering going state]])"},
+                                                {"event":"onUpdate", "action":"function(keys) print([[>>In going state]])"},
+                                                {"event":"onExit", "action":"function(keys) print([[>>Exiting going state]])"}
+                                                ]
+                    },
+                    {"name":"crawling", "junctions":[
+                    							 {"condition":"function(state, keys) return not (keys.isKeyRightPressed and keys.isKeyDownPressed)", "state":"bowed"}
+                    							 ],
+                                    "handlers":[
+                                                {"event":"onEnter", "action":"function(keys) print([[>>Entering crawling state]])"},
+                                                {"event":"onUpdate", "action":"function(keys) print([[>>In crawling state]])"},
+                                                {"event":"onExit", "action":"function(keys) print([[>>Exiting crawling state]])"}
+                                                ]
+                    }
+                    ],
+        "startState": "idle"
+    }
+}
