@@ -35,8 +35,6 @@ function M.main()
   end
 
   local fsm = Fsm.loadFSMFromJson(JsonHelper.loadStringFromFile(sourceFileName))
-  fsm.update()
-
   local input = nil
   
   while input ~= 'exit' do
