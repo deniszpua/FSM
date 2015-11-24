@@ -1,1 +1,23 @@
-{"fsm": {"states": [{"name":"idle", "junctions":[{"condition":"function(state, keys) return keys.isKeyDownPressed", "state":"bowed"}], "handlers": [{"event":"onUpdate", "action":"function(keys) print([[In idle state]])"}]}, {"name":"bowed", "junctions":[{"condition":"function(state, keys) return not keys.isKeyDownPressed", "state":"idle"}], "handlers":[{"event":"onUpdate", "action":"function(keys) print([[In bowed state]])"}]}], "startState": "idle"}}
+{"fsm": {"states": [
+                    {"name":"idle", "junctions":[
+                                                 {"condition":"function(state, keys) return keys.isKeyDownPressed", "state":"bowed"}
+                                                 ],
+                                    "handlers": [
+                                                 {"event":"onEnter", "action":"function(keys) print([[>>Entering idle state]])"},
+                                                 {"event":"onUpdate", "action":"function(keys) print([[>>In idle state]])"},
+                                                 {"event":"onExit", "action":"function(keys) print([[>>Preparing to living idle state]])"},
+                                                 
+                                                 ]
+                    },
+                    {"name":"bowed", "junctions":[
+                                                  {"condition":"function(state, keys) return not keys.isKeyDownPressed", "state":"idle"}
+                                                  ],
+                                    "handlers":[
+                                                {"event":"onEnter", "action":"function(keys) print([[>>Entering bowed state]])"}
+                                                {"event":"onUpdate", "action":"function(keys) print([[>>In bowed state]])"}
+                                                {"event":"onExit", "action":"function(keys) print([[>>Exiting bowed state]])"}
+                                                ]
+                    }],
+        "startState": "idle"
+    }
+}

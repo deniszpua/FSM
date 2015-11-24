@@ -3,6 +3,7 @@ local M = {}
 local Fsm = require("main.fsm")
 local JsonHelper = require("main.jsonhelper")
 
+-- global functions used in module
 local print = print
 local io = io
 local os = os
@@ -39,14 +40,15 @@ function M.main()
   local input = nil
   
   while input ~= 'exit' do
+    fsm.update()
     input = io.read()
     if input then
       for kvPair in string.gmatch(input, "[^:]+:[^:]+") do
         local key = string.match(kvPair, "^%a+")
         local value = parseValue(kvPair)
         fsm.setKey(key, value)
+        
       end
-      fsm.update()
     end
   	
   end
@@ -55,9 +57,7 @@ function M.main()
 end
 
 
----------------------------------------
--- PRIVATE FUNCTIONS
---------------------------------------
+--[[ PRIVATE FUNCTIONS ]]
 
 -- Shows prompt and reads input
 function showSourceInputPromtAndRead()
