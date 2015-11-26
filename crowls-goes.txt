@@ -1,5 +1,10 @@
 isKeyDownPressed:true
 isKeyRightPressed:true
 isKeyDownPressed:false
+
+
+isKeyRightPressed:false
+
+
 exit
 
