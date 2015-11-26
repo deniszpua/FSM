@@ -1,0 +1,5 @@
+isKeyDownPressed:true
+isKeyRightPressed:true
+isKeyDownPressed:false
+exit
+
