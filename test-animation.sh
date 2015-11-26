@@ -1,0 +1,1 @@
+more crowls-goes.txt | ./animation.sh
